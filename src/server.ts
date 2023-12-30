@@ -1,14 +1,7 @@
-import fastify from 'fastify'
-import { knex } from './database'
+import { app } from './app'
 import { env } from './env'
 
-const app = fastify()
 
-app.get('/hello', async () => {
-  const users = await knex('users').select('*')
-    
-  return users
-})
 
 app
   .listen({
