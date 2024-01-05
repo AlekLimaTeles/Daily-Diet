@@ -1,11 +1,13 @@
 import { FastifyInstance } from "fastify";
-import { ZodFirstPartyTypeKind, z } from 'zod'
+import { z } from 'zod'
 import { randomUUID } from 'node:crypto'
 import { knex } from '../database'
+import { checkSessionIdExists } from "../middlewares/check-session-id-exist";
 
 export async function mealsRoutes(app: FastifyInstance) {
     app.post(
         '/',
+        { preHandler: [checkSessionIdExists] },
         async (request, reply) => {
             const createMealBodySchema = z.object({
                 name: z.string(),
@@ -33,6 +35,7 @@ export async function mealsRoutes(app: FastifyInstance) {
 
     app.get(
         '/',
+        { preHandler: [checkSessionIdExists] },
         async (request, reply) => {
             const meals = await knex('meals')
                 .where({ user_id: request.user?.id})
@@ -44,6 +47,7 @@ export async function mealsRoutes(app: FastifyInstance) {
 
     app.get(
         '/:mealId',
+        { preHandler: [checkSessionIdExists] },
         async (request, reply) => {
             const paramsSchema = z.object({ mealId: z.string().uuid() })
 
@@ -61,6 +65,7 @@ export async function mealsRoutes(app: FastifyInstance) {
 
     app.put(
         '/:mealId',
+        { preHandler: [checkSessionIdExists] },
         async (request, reply) => {
             const paramsSchema = z.object({ mealId: z.string().uuid() })
 
@@ -96,6 +101,7 @@ export async function mealsRoutes(app: FastifyInstance) {
 
     app.delete(
         '/:mealId',
+        { preHandler: [checkSessionIdExists] },
         async (request, reply) => {
             const paramsSchema = z.object({ mealId: z.string().uuid() })
 
@@ -115,6 +121,7 @@ export async function mealsRoutes(app: FastifyInstance) {
 
     app.get(
         '/metrics',
+        { preHandler: [checkSessionIdExists] },
         async (request, reply) => {
             const totalMealsOnDiet = await knex('meals')
                 .where({ user_id: request.user?.id, is_on_diet: true })
