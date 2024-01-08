@@ -22,6 +22,9 @@
   "name": "desafio-node02",
   "version": "1.0.0",
   "main": "index.js",
+  "engines": {
+    "node": "18"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "lint": "eslint src --ext .ts --fix",
